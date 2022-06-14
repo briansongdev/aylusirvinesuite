@@ -4,12 +4,12 @@ import "firebase/compat/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDYB6Ur3jfRl83kVOqfgvEP7AGpK0B9_JY",
-  authDomain: "aylusirvinesuite.firebaseapp.com",
-  projectId: "aylusirvinesuite",
-  storageBucket: "aylusirvinesuite.appspot.com",
-  messagingSenderId: "385538358332",
-  appId: "1:385538358332:web:d030c2c9862b58396b9739",
+  apiKey: process.env.A1,
+  authDomain: process.env.A2,
+  projectId: process.env.A3,
+  storageBucket: process.env.A4,
+  messagingSenderId: process.env.A5,
+  appId: process.env.A6,
 };
 
 // Initialize Firebase
