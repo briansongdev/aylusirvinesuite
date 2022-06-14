@@ -125,7 +125,7 @@ const TakeQuiz = (props) => {
             Question {index + 1}: {d.content}
           </strong>
         </Typography>{" "}
-        <Stack direction="row" key={e} spacing={2}>
+        <Stack direction="row" key={index} spacing={2}>
           {d.choices.map((e, asdad) => {
             return (
               <Paper
@@ -141,15 +141,9 @@ const TakeQuiz = (props) => {
                 <IconButton
                   style={{ borderRadius: 0, width: "100%", height: "100%" }}
                   onClick={() => {
-                    if (studentAnswers[index] == d.answer) {
-                      let newArr = studentAnswers.slice();
-                      newArr[index] = "";
-                      changeStudentAnswers(newArr.slice());
-                    } else {
-                      let newArr = studentAnswers.slice();
-                      newArr[index] = e;
-                      changeStudentAnswers(newArr.slice());
-                    }
+                    let newArr = studentAnswers.slice();
+                    newArr[index] = e;
+                    changeStudentAnswers(newArr.slice());
                   }}
                   color={studentAnswers[index] == e ? "primary" : "inherit"}
                 >
@@ -211,9 +205,12 @@ const TakeQuiz = (props) => {
                     I agree to take this quiz for my own benefit, so I can learn
                     more.
                   </strong>{" "}
+                  <br />
+                  <br />
                   I understand that sharing or searching answers will not help
                   me in the long run. I understand that this quiz is also a test
                   of my good judgement.
+                  <br />
                   <br />
                   For synchronous quizzes, if the teacher stops the quiz, your
                   answers will be saved + submitted. <strong>Good luck!</strong>
