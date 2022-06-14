@@ -124,10 +124,10 @@ const TakeQuiz = (props) => {
           <strong>
             Question {index + 1}: {d.content}
           </strong>
-        </Typography>
-        {d.choices.map((e) => {
-          return (
-            <Stack direction="row" key={e} spacing={2}>
+        </Typography>{" "}
+        <Stack direction="row" key={e} spacing={2}>
+          {d.choices.map((e) => {
+            return (
               <Paper
                 elevation={3}
                 style={{
@@ -150,18 +150,16 @@ const TakeQuiz = (props) => {
                       changeStudentAnswers(newArr.slice());
                     }
                   }}
-                  color={
-                    studentAnswers[index] == d.answer ? "primary" : "inherit"
-                  }
+                  color={studentAnswers[index] == e ? "primary" : "inherit"}
                 >
                   <Typography style={{ padding: "10px 10px 10px 10px" }}>
                     <strong>{e}</strong>
                   </Typography>
                 </IconButton>
               </Paper>
-            </Stack>
-          );
-        })}
+            );
+          })}{" "}
+        </Stack>
       </Stack>
     );
   });
@@ -216,7 +214,8 @@ const TakeQuiz = (props) => {
                   me in the long run. I understand that this quiz is also a test
                   of my good judgement.
                   <br />
-                  For synchronous quizes,
+                  For synchronous quizzes, if the teacher stops the quiz, your
+                  answers will be saved + submitted. <strong>Good luck!</strong>
                 </Alert>
                 <Button
                   onClick={async () => {

@@ -639,9 +639,9 @@ const Dashboard = (props) => {
         <DialogTitle>Create Quiz for {currentCourse} Class</DialogTitle>
         <DialogContent style={{ height: "80vh" }}>
           <DialogContentText>
-            Enter title and create quiz questions. Choose asynchronous (take
-            anytime) or synchronous (better for in-class quizzes, lock and
-            unlock available).
+            Choose between asynchronous (take anytime) or synchronous (better
+            for in-class quizzes, lock and unlock available). Max. 4 choices per
+            question.
           </DialogContentText>
           <FormGroup>
             <FormControlLabel
@@ -727,7 +727,11 @@ const Dashboard = (props) => {
             style={{ marginBottom: "10px" }}
           />
           <Button
-            disabled={totalChoices.length == 0 || draftAnswer == ""}
+            disabled={
+              totalChoices.length == 0 ||
+              draftAnswer == "" ||
+              totalChoices.length > 4
+            }
             variant="outlined"
             color="secondary"
             style={{ marginBottom: "10px" }}

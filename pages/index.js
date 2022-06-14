@@ -284,11 +284,11 @@ const Home = (props) => {
                   onClose={handleClose}
                 >
                   <Link href="/login" passHref>
-                    <MenuItem>Login as student/teacher</MenuItem>
+                    <MenuItem>Student/teacher Class Login</MenuItem>
                   </Link>
 
                   <Link href="/volunteers" passHref>
-                    <MenuItem>Login as a volunteer</MenuItem>
+                    <MenuItem>General Volunteer Login</MenuItem>
                   </Link>
                 </Menu>
               </>
