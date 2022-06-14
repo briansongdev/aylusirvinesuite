@@ -85,6 +85,7 @@ const Chat = (props) => {
             <Button
               sx={{ mr: "10%" }}
               onClick={() => {
+                setOpen(true);
                 axios.post("/api/logout").then(
                   setTimeout(() => {
                     window.location = "/";
