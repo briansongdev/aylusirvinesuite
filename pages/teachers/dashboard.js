@@ -283,7 +283,7 @@ const Dashboard = (props) => {
                   axios.post("/api/logout").then(
                     setTimeout(() => {
                       window.location = "/";
-                    }, 500)
+                    }, 1000)
                   );
                 }}
               >

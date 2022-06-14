@@ -1,14 +1,18 @@
 import "../styles/globals.css";
 import Head from "next/head";
 import { AppBar, Toolbar, Box } from "@mui/material";
-import {
-  BrowserView,
-  MobileView,
-  isBrowser,
-  isMobile,
-} from "react-device-detect";
+import { MobileView } from "react-device-detect";
+import "nprogress/nprogress.css";
+import dynamic from "next/dynamic";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+const TopProgressBar = dynamic(
+  () => {
+    return import("../components/TopProgressBar");
+  },
+  { ssr: false }
+);
 
 const theme = createTheme({
   typography: {
@@ -36,6 +40,7 @@ function MyApp({ Component, pageProps }) {
         <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
       <ThemeProvider theme={theme}>
+        <TopProgressBar />
         <MobileView>
           <AppBar position="static" sx={{ bgcolor: "#ffcccb" }} elevation={0}>
             <Toolbar>

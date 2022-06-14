@@ -160,7 +160,7 @@ const Home = (props) => {
                     variant="outlined"
                     style={{ margin: "10px 10px 0px 10px" }}
                     onClick={() => {
-                      router.push("/quiz" + currentCourse + "/" + index);
+                      router.push("/quiz/" + currentCourse + "/" + index);
                     }}
                   >
                     Take Quiz (Unlocked)
