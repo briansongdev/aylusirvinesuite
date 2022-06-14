@@ -42,10 +42,9 @@ function MyApp({ Component, pageProps }) {
               <Box sx={{ flexGrow: 1, ml: "10%" }}>
                 <span
                   style={{
-                    fontWeight: "bold",
+                    color: "red",
                     fontSize: "25px",
                   }}
-                  id="vibrantIcon"
                 >
                   Use landscape (horizontal) mode or use a computer for best
                   experience. Thank you.
