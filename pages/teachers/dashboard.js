@@ -710,7 +710,7 @@ const Dashboard = (props) => {
             disabled={
               draftChoices == "" ||
               draftQuestion == "" ||
-              totalChoices.length > 4
+              totalChoices.length >= 4
             }
           >
             Add another choice
