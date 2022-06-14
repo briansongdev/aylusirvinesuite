@@ -43,7 +43,6 @@ function MyApp({ Component, pageProps }) {
                 <span
                   style={{
                     fontWeight: "bold",
-                    fontFamily: "Lexend Deca",
                     fontSize: "25px",
                   }}
                   id="vibrantIcon"

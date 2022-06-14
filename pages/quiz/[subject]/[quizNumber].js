@@ -7,30 +7,17 @@ import {
   Toolbar,
   IconButton,
   Box,
-  Menu,
-  MenuItem,
   Button,
   Grid,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   Alert,
-  AlertTitle,
   Container,
-  Divider,
-  Fab,
   Backdrop,
   CircularProgress,
   Paper,
 } from "@mui/material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import { styled } from "@mui/material/styles";
 import { parseCookies } from "nookies";
 import verifyCookie from "../../../fire/verifyCookie";
 import { useState, useEffect } from "react";
-import axios from "axios";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useRouter } from "next/router";
 import { doc, getDoc, setDoc, arrayUnion, Timestamp } from "firebase/firestore";
 import { db } from "../../../fire/fireConfig";

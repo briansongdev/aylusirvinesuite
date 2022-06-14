@@ -43,8 +43,6 @@ const Chat = (props) => {
 
   const [chatPinged, changePinged] = useState();
 
-  const [firstTime, changeFirst] = useState(false);
-
   useEffect(() => {
     const docRef = doc(db, "messages", chatSubject);
     //real time update
@@ -52,10 +50,13 @@ const Chat = (props) => {
       changePinged(await (await getDoc(docRef)).data().ping);
       updateChat(await (await getDoc(docRef)).data().chat);
     }, 5000);
+  }, [chat]);
+
+  useEffect(() => {
     setTimeout(() => {
       window.location = "/";
     }, 900001);
-  }, [chat]);
+  }, []);
 
   return (
     <>

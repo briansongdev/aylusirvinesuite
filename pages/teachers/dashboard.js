@@ -54,7 +54,7 @@ import Linkify from "react-linkify";
 const Dashboard = (props) => {
   const router = useRouter();
 
-  const [usernameValue, changeUsernameValue] = useState(props.details.name);
+  const [usernameValue, changeUsernameValue] = useState("");
   const [courses, setCourses] = useState(props.details.courses);
   const [currentCourse, setCurrentCourse] = useState(props.details.courses[0]);
 
