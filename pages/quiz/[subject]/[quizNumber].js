@@ -119,7 +119,7 @@ const TakeQuiz = (props) => {
 
   const listQuizQuestions = quizContent.map((d, index) => {
     return (
-      <Stack>
+      <Stack key={index}>
         <Typography variant="h6">
           <strong>
             Question {index + 1}: {d.content}
@@ -127,7 +127,7 @@ const TakeQuiz = (props) => {
         </Typography>
         {d.choices.map((e) => {
           return (
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" key={e} spacing={2}>
               <Paper
                 elevation={3}
                 style={{
@@ -248,7 +248,7 @@ const TakeQuiz = (props) => {
                   style={{ width: "50%", margin: "5px 5px 5px 5px" }}
                 >
                   Do not refresh this page or exit out. Your progress will be
-                  lost, and you won't be able to return.
+                  lost, and you won&apos;t be able to return.
                 </Alert>
                 <Container>{listQuizQuestions}</Container>
                 <Button

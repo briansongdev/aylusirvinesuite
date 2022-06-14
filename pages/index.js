@@ -308,7 +308,7 @@ const Home = (props) => {
               <Typography>
                 {" "}
                 An all-in-one collection for everything AYLUS Irvine. Glad
-                you're here.
+                you&apos;re here.
               </Typography>
               <Typography
                 variant="h4"
@@ -319,11 +319,12 @@ const Home = (props) => {
               </Typography>
               <Typography>
                 AYLUS Irvine is an organization dedicated to bettering both
-                volunteers' and students' experiences. Leveraging the power of
-                webapps, we can communicate information through a convenient,
-                comfortable, personal, and safe medium like no other. Starting
-                with <span id="vibrantIcon">AYLUS Irvine Volunteers</span> in
-                2020, we have now expanded to the premier AYLUS Irvine{" "}
+                volunteers&apos; and students&apos; experiences. Leveraging the
+                power of webapps, we can communicate information through a
+                convenient, comfortable, personal, and safe medium like no
+                other. Starting with{" "}
+                <span id="vibrantIcon">AYLUS Irvine Volunteers</span> in 2020,
+                we have now expanded to the premier AYLUS Irvine{" "}
                 <span
                   id="vibrantIcon"
                   style={{ fontFamily: "Lexend Deca", fontWeight: "bold" }}
@@ -427,8 +428,8 @@ const Home = (props) => {
                     Welcome <span id="vibrantIcon">{props.details.name}!</span>{" "}
                     {props.details.name == "Unknown User" ? (
                       <>
-                        Please set up your profile in "About Me" on the top
-                        right.
+                        Please set up your profile in &quot;About Me&quot; on
+                        the top right.
                       </>
                     ) : (
                       <></>
@@ -564,7 +565,7 @@ const Home = (props) => {
                             </a>
                           )}
                         >
-                          >{announcementList}
+                          {announcementList}
                         </Linkify>
                         <Typography variant="overline">
                           End of announcements!

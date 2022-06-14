@@ -168,7 +168,7 @@ const AboutMe = (props) => {
                       classes:
                     </Typography>
                     {props.details.courses.map((e) => {
-                      return <Typography>- {e}</Typography>;
+                      return <Typography key="3">- {e}</Typography>;
                     })}
                     <br />
                     <Typography>
@@ -193,7 +193,7 @@ const AboutMe = (props) => {
                     <br />
                     {props.details.activeQuizzes.map((e) => {
                       return (
-                        <Typography>
+                        <Typography key={e.quizTitle}>
                           {e.quizSubject}: {e.quizTitle} started{" "}
                           {new Date(
                             JSON.parse(e.date).seconds * 1000
@@ -262,7 +262,7 @@ const AboutMe = (props) => {
             <br />
             {gradeList[currentQuiz].questions.map((el, index) => {
               return (
-                <Stack>
+                <Stack key={index}>
                   <Typography>
                     Question {index + 1}: {el}
                   </Typography>
