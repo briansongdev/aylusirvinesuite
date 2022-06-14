@@ -126,9 +126,10 @@ const TakeQuiz = (props) => {
           </strong>
         </Typography>{" "}
         <Stack direction="row" key={e} spacing={2}>
-          {d.choices.map((e) => {
+          {d.choices.map((e, asdad) => {
             return (
               <Paper
+                key={asdad}
                 elevation={3}
                 style={{
                   width: "250px",
