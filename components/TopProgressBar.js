@@ -4,7 +4,7 @@ import NProgress from "nprogress";
 let timer;
 let state;
 let activeRequests = 0;
-const delay = 150;
+const delay = 200;
 
 function load() {
   if (state === "loading") {
@@ -54,6 +54,6 @@ window.fetch = async function (...args) {
   }
 };
 
-export default function () {
+export default function TopProgressBar() {
   return null;
 }
