@@ -40,7 +40,18 @@ a {
   margin-bottom: 0px;
   width: 100%;
 }
+#nprogress .bar {
+  background: #ffcd38 !important;
+}
 
+#nprogress .peg {
+  box-shadow: 0 0 10px #ffcd38, 0 0 5px #ffcd38;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #ffcd38;
+  border-left-color: #ffcd38;
+}
 #teacherIcon {
   background: -moz-linear-gradient(
     90deg,
