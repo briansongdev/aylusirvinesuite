@@ -23,13 +23,15 @@ export default async function auth(req, res) {
             if (
               decodedIdToken.email == "asherding2012@gmail.com" ||
               decodedIdToken.email == "claylandlee@gmail.com" ||
-              decodedIdToken.email == "brians3476@gmail.com"
+              decodedIdToken.email == "brians3476@gmail.com" ||
+              decodedIdToken.email == "tim.cai0928@gmail.com"
             ) {
               await setDoc(docRef, {
                 email: decodedIdToken.email,
                 name: "Unknown Teacher",
                 posts: {},
-                grades: {},
+                grades: [],
+                activeQuizzes: [],
                 courses: ["Math", "Physics", "Computer Science", "Piano"],
                 isTeacher: true,
               });
@@ -38,7 +40,8 @@ export default async function auth(req, res) {
                 email: decodedIdToken.email,
                 name: "Unknown User",
                 posts: {},
-                grades: {},
+                grades: [],
+                activeQuizzes: [],
                 courses: ["Math", "Physics", "Computer Science", "Piano"],
                 isTeacher: false,
               });

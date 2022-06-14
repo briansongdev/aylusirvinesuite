@@ -27,11 +27,15 @@ import {
   FormGroup,
   Alert,
   AlertTitle,
+  Backdrop,
+  CircularProgress,
+  Badge,
 } from "@mui/material";
 import { parseCookies } from "nookies";
 import verifyCookie from "../../fire/verifyCookie";
 import { useState, useEffect } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import axios from "axios";
 import {
   doc,
@@ -45,6 +49,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../fire/fireConfig";
+import Linkify from "react-linkify";
 
 const Dashboard = (props) => {
   const router = useRouter();
@@ -78,6 +83,10 @@ const Dashboard = (props) => {
     setSelectedIndex(index);
   };
 
+  const [pingedCourse, changePing] = useState();
+
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     setTimeout(() => {
       window.location.reload(false);
@@ -93,6 +102,9 @@ const Dashboard = (props) => {
         await (await getDoc(doc(db, "messages", currentCourse))).data()
           .announcements
       );
+      changePing(
+        await (await getDoc(doc(db, "messages", currentCourse))).data().ping
+      );
     };
     fetchData();
   }, [currentCourse]);
@@ -103,39 +115,42 @@ const Dashboard = (props) => {
     </>
   ));
 
-  let announcementList = announcementLists.map((d) => (
-    <>
-      {d.isUrgent ? (
-        <Alert severity="error" style={{ margin: "5px 5px 5px 5px" }}>
-          <AlertTitle>
-            <strong>IMPORTANT - {d.title}</strong>
-          </AlertTitle>
-          {d.content}
-          <br />
-          <Typography variant="overline">
-            <strong>[TEACHER]</strong> {d.name} -{" "}
-            {new Date(d.time.seconds * 1000).toLocaleString()}
-          </Typography>
-        </Alert>
-      ) : (
-        <Alert
-          severity="info"
-          style={{ margin: "5px 5px 5px 5px" }}
-          variant="outlined"
-        >
-          <AlertTitle>
-            <strong>{d.title}</strong>
-          </AlertTitle>
-          {d.content}
-          <br />
-          <Typography variant="overline">
-            <strong>[TEACHER]</strong> {d.name} -{" "}
-            {new Date(d.time.seconds * 1000).toLocaleString()}
-          </Typography>
-        </Alert>
-      )}
-    </>
-  ));
+  let announcementList = announcementLists
+    .slice()
+    .reverse()
+    .map((d) => (
+      <>
+        {d.isUrgent ? (
+          <Alert severity="error" style={{ margin: "5px 5px 5px 5px" }}>
+            <AlertTitle>
+              <strong>IMPORTANT - {d.title}</strong>
+            </AlertTitle>
+            {d.content}
+            <br />
+            <Typography variant="overline">
+              <strong>[TEACHER]</strong> {d.name} -{" "}
+              {new Date(d.time.seconds * 1000).toLocaleString()}
+            </Typography>
+          </Alert>
+        ) : (
+          <Alert
+            severity="info"
+            style={{ margin: "5px 5px 5px 5px" }}
+            variant="outlined"
+          >
+            <AlertTitle>
+              <strong>{d.title}</strong>
+            </AlertTitle>
+            {d.content}
+            <br />
+            <Typography variant="overline">
+              <strong>[TEACHER]</strong> {d.name} -{" "}
+              {new Date(d.time.seconds * 1000).toLocaleString()}
+            </Typography>
+          </Alert>
+        )}
+      </>
+    ));
 
   let quizQuestions = contentOfQuiz.map((d, index) => (
     <>
@@ -166,6 +181,7 @@ const Dashboard = (props) => {
         {d.quizSynced && !d.isActive ? (
           <Button
             onClick={async () => {
+              setOpen(true);
               let arrToChange = await (
                 await getDoc(doc(db, "messages", currentCourse))
               ).data().quizzes;
@@ -184,6 +200,7 @@ const Dashboard = (props) => {
         {d.quizSynced && d.isActive ? (
           <Button
             onClick={async () => {
+              setOpen(true);
               let arrToChange = await (
                 await getDoc(doc(db, "messages", currentCourse))
               ).data().quizzes;
@@ -209,10 +226,9 @@ const Dashboard = (props) => {
         style={{
           paddingLeft: "20px",
           paddingTop: "10px",
-          paddingBottom: "10px",
         }}
       >
-        {d} - Grade: WILL BE UPDATED SOON
+        {d.name} - {d.email}
       </Typography>
     </>
   ));
@@ -288,24 +304,11 @@ const Dashboard = (props) => {
             alignItems="center"
             direction="column"
           >
-            <Paper
-              elevation={1}
-              style={{
-                textAlign: "center",
-                width: "20%",
-                margin: "10px 10px 10px 10px",
-              }}
-            >
-              <Stack style={{ padding: "10px 5px 10px 5px" }}>
-                <Typography style={{ fontWeight: "bold" }}>
-                  Welcome to <span id="vibrantIcon">suite.</span>
-                </Typography>
-                <Typography>
-                  Make sure to send class reminders through "Announcements."
-                  Enjoy!
-                </Typography>
-              </Stack>
-            </Paper>
+            <Stack style={{ padding: "10px 5px 0px 5px" }}>
+              <Typography variant="h5">
+                Welcome to <span id="vibrantIcon">suite.</span>
+              </Typography>
+            </Stack>
             {props.details.name == "Unknown Teacher" ? (
               <Paper
                 elevation={3}
@@ -313,7 +316,8 @@ const Dashboard = (props) => {
               >
                 <Stack style={{ padding: "10px 10px 10px 10px" }}>
                   <Typography>
-                    Change your name to unlock the rest of the dashbaord.
+                    Change to your first name to unlock the rest of the
+                    dashboard.
                   </Typography>
                   <TextField
                     variant="filled"
@@ -325,6 +329,7 @@ const Dashboard = (props) => {
                   />
                   <Button
                     onClick={async () => {
+                      setOpen(true);
                       await setDoc(
                         doc(db, "users", props.uid),
                         {
@@ -350,7 +355,7 @@ const Dashboard = (props) => {
                     spacing={2}
                     style={{ paddingTop: "20px" }}
                   >
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                       {" "}
                       <Divider />
                       <List>
@@ -371,7 +376,7 @@ const Dashboard = (props) => {
                         {classItems}
                       </List>
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid item xs={10}>
                       <AppBar position="static" elevation={0}>
                         <Toolbar>
                           <Typography
@@ -405,6 +410,7 @@ const Dashboard = (props) => {
                                   "Confirm remove? To add back this course, you'll need to contact Brian."
                                 )
                               ) {
+                                setOpen(true);
                                 await setDoc(
                                   doc(db, "users", props.uid),
                                   {
@@ -428,28 +434,98 @@ const Dashboard = (props) => {
                         style={{ paddingTop: "20px" }}
                       >
                         {" "}
-                        <Grid item xs={5}>
-                          <Link href={"/" + currentCourse}>
-                            <a target="_blank" rel="noopener noreferrer">
-                              <Button
-                                variant="contained"
-                                color="secondary"
-                                endIcon={<OpenInNewIcon />}
-                                style={{ margin: "0px 10px 10px 0px" }}
+                        <Grid item xs={7}>
+                          {typeof pingedCourse != "undefined" &&
+                          pingedCourse.name != "" ? (
+                            <>
+                              {" "}
+                              <Badge color="secondary" badgeContent={1}>
+                                <PriorityHighIcon />
+                              </Badge>{" "}
+                              <span
+                                style={{
+                                  paddingRight: "5px",
+                                  paddingLeft: "5px",
+                                  color: "red",
+                                  textDecoration: "underline",
+                                }}
                               >
-                                Open Group Chat ({currentCourse})
-                              </Button>
-                            </a>
-                          </Link>
-                          <Typography variant="h4">Active quizzes:</Typography>
-                          {currentQuizzes}
-                          <Typography variant="h4">Student list:</Typography>
-                          {currentStudents}
+                                {" "}
+                                {pingedCourse.name}/{pingedCourse.email}{" "}
+                                chat-pinged you.
+                              </span>{" "}
+                            </>
+                          ) : (
+                            <></>
+                          )}{" "}
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            endIcon={<OpenInNewIcon />}
+                            style={{ margin: "0px 10px 10px 0px" }}
+                            onClick={async () => {
+                              await setDoc(
+                                doc(db, "messages", currentCourse),
+                                {
+                                  ping: {
+                                    name: "",
+                                    email: "",
+                                  },
+                                },
+                                { merge: true }
+                              );
+                              window.open("/" + currentCourse, "_blank");
+                              window.location.reload(false);
+                            }}
+                          >
+                            Open Chat
+                          </Button>
+                          <Paper
+                            style={{ margin: "3px 3px 3px 3px" }}
+                            elevation={2}
+                          >
+                            <div style={{ padding: "5px 5px 5px 5px" }}>
+                              <Typography variant="h4">
+                                Active quizzes:
+                              </Typography>
+                              {currentQuizzes}
+                              <Typography variant="h4">
+                                Student list:
+                              </Typography>
+                              {currentStudents}
+                              <br />
+                              <Alert style={{ margin: "5px 5px 5px 5px" }}>
+                                You can ask Brian for a weekly report of their
+                                grades. Students will be able to view past
+                                quizzes and what they missed on their own, as
+                                well. You should remind them of this during
+                                class.
+                              </Alert>
+                            </div>
+                          </Paper>
                         </Grid>{" "}
                         <Divider orientation="vertical" flexItem />
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                           <Typography variant="h4">Announcements:</Typography>
-                          {announcementList}
+                          <Linkify
+                            componentDecorator={(
+                              decoratedHref,
+                              decoratedText,
+                              key
+                            ) => (
+                              <a
+                                target="blank"
+                                href={decoratedHref}
+                                key={key}
+                                style={{ color: "#66ff00" }}
+                              >
+                                {decoratedText}
+                              </a>
+                            )}
+                          >
+                            {" "}
+                            {announcementList}
+                          </Linkify>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -476,8 +552,8 @@ const Dashboard = (props) => {
         <DialogTitle>Create Announcement for {currentCourse} Class</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Enter title and intended content. Once published, information cannot
-            be deleted.
+            Enter title and content. Include links! It will recognize them. Once
+            published, information cannot be deleted.
           </DialogContentText>
           <FormGroup>
             <FormControlLabel
@@ -535,6 +611,7 @@ const Dashboard = (props) => {
                 )
               ) {
                 // collect timestamp AND email/username
+                setOpen(true);
                 await setDoc(
                   doc(db, "messages", currentCourse),
                   {
@@ -686,6 +763,7 @@ const Dashboard = (props) => {
           </Button>
           <Button
             onClick={async () => {
+              setOpen(true);
               if (confirm("Create quiz? This cannot be undone.")) {
                 // collect timestamp AND email/username
                 await setDoc(
@@ -711,6 +789,9 @@ const Dashboard = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Backdrop sx={{ color: "#fff" }} open={open}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 };

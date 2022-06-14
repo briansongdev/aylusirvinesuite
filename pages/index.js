@@ -20,9 +20,14 @@ import {
   Container,
   Divider,
   Fab,
+  Backdrop,
+  CircularProgress,
+  Paper,
+  TextField,
+  Avatar,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { styled } from "@mui/material/styles";
+import Linkify from "react-linkify";
 import { parseCookies } from "nookies";
 import verifyCookie from "../fire/verifyCookie";
 import { useState, useEffect } from "react";
@@ -31,30 +36,22 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import {
   doc,
   getDoc,
-  getDocs,
   setDoc,
-  addDoc,
-  collection,
-  serverTimestamp,
   arrayRemove,
   arrayUnion,
 } from "firebase/firestore";
 import { db } from "../fire/fireConfig";
-
+import { useRouter } from "next/router";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
-const Item = styled(Typography)(({ theme }) => ({
-  padding: theme.spacing(1),
-  textAlign: "center",
-  fontSize: "26px",
-  fontWeight: "bold",
-}));
-
 const Home = (props) => {
+  const router = useRouter();
+
   const [selectedIndex, setSelectedIndex] = useState(0);
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
+  const [usernameValue, changeUsernameValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [courses, setCourses] = useState(
     props.uid != "" ? props.details.courses : null
@@ -63,6 +60,7 @@ const Home = (props) => {
     props.uid != "" ? props.details.courses[0] : null
   );
   const [quizzes, changeQuizzes] = useState([]);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     setTimeout(() => {
       window.location.reload(false);
@@ -83,42 +81,58 @@ const Home = (props) => {
     }
   }, [currentCourse]);
 
+  function testIfDisabled(index) {
+    for (let gl = 0; gl < props.details.activeQuizzes.length; gl++) {
+      if (
+        props.details.activeQuizzes[gl].quizNumber == index &&
+        props.details.activeQuizzes[gl].quizSubject == currentCourse
+      ) {
+        console.log("true");
+        return true;
+      }
+    }
+    return false;
+  }
+
   const [announcementLists, changeAnnoucementList] = useState([]);
   let announcementList = null;
   if (props.uid != "") {
-    announcementList = announcementLists.map((d) => (
-      <>
-        {d.isUrgent ? (
-          <Alert severity="error" style={{ margin: "5px 5px 5px 5px" }}>
-            <AlertTitle>
-              <strong>IMPORTANT - {d.title}</strong>
-            </AlertTitle>
-            {d.content}
-            <br />
-            <Typography variant="overline">
-              <strong>[TEACHER]</strong> {d.name} -{" "}
-              {new Date(d.time.seconds * 1000).toLocaleString()}
-            </Typography>
-          </Alert>
-        ) : (
-          <Alert
-            severity="info"
-            style={{ margin: "5px 5px 5px 5px" }}
-            variant="outlined"
-          >
-            <AlertTitle>
-              <strong>{d.title}</strong>
-            </AlertTitle>
-            {d.content}
-            <br />
-            <Typography variant="overline">
-              <strong>[TEACHER]</strong> {d.name} -{" "}
-              {new Date(d.time.seconds * 1000).toLocaleString()}
-            </Typography>
-          </Alert>
-        )}
-      </>
-    ));
+    announcementList = announcementLists
+      .slice()
+      .reverse()
+      .map((d) => (
+        <>
+          {d.isUrgent ? (
+            <Alert severity="error" style={{ margin: "5px 5px 5px 5px" }}>
+              <AlertTitle>
+                <strong>IMPORTANT - {d.title}</strong>
+              </AlertTitle>
+              {d.content}
+              <br />
+              <Typography variant="overline">
+                <strong>[TEACHER]</strong> {d.name} -{" "}
+                {new Date(d.time.seconds * 1000).toLocaleString()}
+              </Typography>
+            </Alert>
+          ) : (
+            <Alert
+              severity="info"
+              style={{ margin: "5px 5px 5px 5px" }}
+              variant="outlined"
+            >
+              <AlertTitle>
+                <strong>{d.title}</strong>
+              </AlertTitle>
+              {d.content}
+              <br />
+              <Typography variant="overline">
+                <strong>[TEACHER]</strong> {d.name} -{" "}
+                {new Date(d.time.seconds * 1000).toLocaleString()}
+              </Typography>
+            </Alert>
+          )}
+        </>
+      ));
   }
   let currentQuizzes = null;
   if (props.uid != "")
@@ -144,7 +158,10 @@ const Home = (props) => {
                 <>
                   <Button
                     variant="outlined"
-                    style={{ margin: "10px 10px 10px 10px" }}
+                    style={{ margin: "10px 10px 0px 10px" }}
+                    onClick={() => {
+                      router.push("/quiz" + currentCourse + "/" + index);
+                    }}
                   >
                     Take Quiz (Unlocked)
                   </Button>
@@ -157,7 +174,11 @@ const Home = (props) => {
             <>
               <Button
                 variant="outlined"
-                style={{ margin: "10px 10px 10px 10px" }}
+                style={{ margin: "10px 10px 0px 10px" }}
+                onClick={() => {
+                  router.push("/quiz/" + currentCourse + "/" + index);
+                }}
+                disabled={testIfDisabled(index)}
               >
                 Take Quiz
               </Button>
@@ -239,7 +260,6 @@ const Home = (props) => {
               </>
             ) : (
               <>
-                <Button sx={{ mr: "1%" }}>Explore</Button>
                 <IconButton
                   color="primary"
                   sx={{ mr: "10%" }}
@@ -264,7 +284,7 @@ const Home = (props) => {
                   onClose={handleClose}
                 >
                   <Link href="/login" passHref>
-                    <MenuItem>Login as a student</MenuItem>
+                    <MenuItem>Login as teacher/student</MenuItem>
                   </Link>
 
                   <Link href="/volunteers" passHref>
@@ -276,117 +296,145 @@ const Home = (props) => {
           </Toolbar>
         </AppBar>
         {props.uid == "" ? (
-          <Stack>
-            <Item>An all-in-one collection for everything AYLUS Irvine.</Item>
-          </Stack>
-        ) : (
-          <Container>
-            <Grid
-              container
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              style={{ margin: "10px 5px 0px 5px" }}
-            >
+          <Container style={{ marginTop: "30px" }}>
+            <Stack spacing={2}>
               <Typography
-                style={{
-                  textAlign: "center",
-                  paddingTop: "10px",
-                  paddingBottom: "10px",
-                  paddingRight: "20px",
-                }}
+                variant="h4"
+                id="vibrantIcon"
+                style={{ fontFamily: "Lexend Deca" }}
               >
-                Welcome <span id="vibrantIcon">{props.details.name}!</span>{" "}
-                {props.details.name == "Unknown User" ? (
-                  <>
-                    Please set up your profile in "About Me" on the top right.
-                  </>
-                ) : (
-                  <></>
-                )}
-              </Typography>{" "}
-              <Fab
-                variant="extended"
-                color="secondary"
-                size="medium"
-                onClick={async () => {
-                  if (
-                    confirm(
-                      "This will add back all possible courses. You can remove any as you please later."
-                    )
-                  ) {
-                    await setDoc(
-                      doc(db, "users", props.uid),
-                      {
-                        courses: [],
-                      },
-                      { merge: true }
-                    );
-                    window.location.reload(false);
-                  }
-                }}
+                Welcome to our site! 👋
+              </Typography>
+              <Typography>
+                {" "}
+                An all-in-one collection for everything AYLUS Irvine. Glad
+                you're here.
+              </Typography>
+              <Typography
+                variant="h4"
+                id="vibrantIcon"
+                style={{ fontFamily: "Lexend Deca" }}
               >
-                <AddCircleOutlineIcon sx={{ mr: 1 }} />
-                Add Courses
-              </Fab>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="flex-start"
-              spacing={2}
-              style={{ paddingTop: "20px" }}
-            >
-              <Grid item xs={4}>
-                <Divider />
-                <List>
-                  <ListItem disablePadding>
-                    <ListItemText
-                      disableTypography
-                      primary={
-                        <Typography variant="h5" style={{ fontWeight: "bold" }}>
-                          My Current Courses
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-                  <Divider />
-                  {classItems}
-                </List>
+                A Legacy of Excellence 🌻
+              </Typography>
+              <Typography>
+                AYLUS Irvine is an organization dedicated to bettering both
+                volunteers' and students' experiences. Leveraging the power of
+                webapps, we can communicate information through a convenient,
+                comfortable, personal, and safe medium like no other. Starting
+                with <span id="vibrantIcon">AYLUS Irvine Volunteers</span> in
+                2020, we have now expanded to the premier AYLUS Irvine{" "}
+                <span
+                  id="vibrantIcon"
+                  style={{ fontFamily: "Lexend Deca", fontWeight: "bold" }}
+                >
+                  suite.
+                </span>
+              </Typography>
+              <Typography
+                variant="h4"
+                id="vibrantIcon"
+                style={{ fontFamily: "Lexend Deca" }}
+              >
+                Ready to get started? 🚩
+              </Typography>
+              <Stack direction="row">
+                <Typography>Click the </Typography>
+                <AccountCircle
+                  color="primary"
+                  style={{ margin: "0px 10px 0px 10px" }}
+                />
+                <Typography>
+                  on the top right to login, either as a student, a teacher, or
+                  a volunteer.
+                </Typography>
+              </Stack>
+              <Grid container textAlign="center" justifyContent="center">
+                <Avatar
+                  alt="AYLUS Irvine"
+                  src="aylus.jpg"
+                  sx={{ width: 100, height: 100 }}
+                  style={{
+                    border: "0.1px solid lightgray",
+                  }}
+                />
               </Grid>
-              <Grid item xs={8}>
-                <AppBar position="static" elevation={0}>
-                  <Toolbar>
-                    <Typography
-                      variant="h6"
-                      component="div"
-                      sx={{ flexGrow: 1 }}
-                    >
-                      {currentCourse} Class: Chat
+            </Stack>
+          </Container>
+        ) : (
+          <>
+            {props.details.name == "Unknown User" ? (
+              <Grid
+                container
+                justifyContent="center"
+                alignItems="center"
+                style={{ margin: "10px 10px 10px 10px" }}
+              >
+                {" "}
+                <Paper
+                  elevation={3}
+                  style={{ textAlign: "center", width: "60%" }}
+                >
+                  <Stack style={{ padding: "10px 10px 10px 10px" }}>
+                    <Typography>
+                      Change your name to unlock the rest of your dashboard. You
+                      cannot change this later.
                     </Typography>
+                    <TextField
+                      variant="filled"
+                      label="Edit name here"
+                      value={usernameValue}
+                      onChange={(e) => {
+                        changeUsernameValue(e.target.value);
+                      }}
+                    />
                     <Button
-                      color="secondary"
                       onClick={async () => {
-                        if (
-                          confirm(
-                            "Are you sure? Your data in the course will be saved, but you will not see it until you add the course back again."
-                          )
-                        ) {
-                          await setDoc(
-                            doc(db, "users", props.uid),
-                            {
-                              courses: arrayRemove(currentCourse),
-                            },
-                            { merge: true }
-                          );
-                          window.location.reload(false);
-                        }
+                        setOpen(true);
+                        await setDoc(
+                          doc(db, "users", props.uid),
+                          {
+                            name: usernameValue,
+                          },
+                          { merge: true }
+                        );
+                        window.location.reload(false);
                       }}
                     >
-                      Remove Course
+                      Edit name
                     </Button>
-                  </Toolbar>
-                </AppBar>
+                  </Stack>
+                </Paper>
+              </Grid>
+            ) : (
+              <Container>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  style={{ margin: "10px 5px 0px 5px" }}
+                >
+                  <Typography
+                    style={{
+                      textAlign: "center",
+                      paddingTop: "10px",
+                      paddingBottom: "10px",
+                      paddingRight: "20px",
+                    }}
+                    variant="h4"
+                  >
+                    Welcome <span id="vibrantIcon">{props.details.name}!</span>{" "}
+                    {props.details.name == "Unknown User" ? (
+                      <>
+                        Please set up your profile in "About Me" on the top
+                        right.
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </Typography>{" "}
+                </Grid>
                 <Grid
                   container
                   direction="row"
@@ -394,34 +442,145 @@ const Home = (props) => {
                   spacing={2}
                   style={{ paddingTop: "20px" }}
                 >
-                  {" "}
-                  <Grid item xs={5}>
-                    <Link href={"/" + currentCourse}>
-                      <a target="_blank" rel="noopener noreferrer">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          endIcon={<OpenInNewIcon />}
-                          style={{ margin: "0px 10px 10px 0px" }}
+                  <Grid item xs={4}>
+                    <Divider />
+                    <List>
+                      <ListItem disablePadding>
+                        <ListItemText
+                          disableTypography
+                          primary={
+                            <Typography
+                              variant="h5"
+                              style={{ fontWeight: "bold" }}
+                            >
+                              My Current Courses
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                      <Divider />
+                      {classItems}
+                    </List>
+                    <Fab
+                      variant="extended"
+                      color="secondary"
+                      size="medium"
+                      onClick={async () => {
+                        if (
+                          confirm(
+                            "This will add back all possible courses. You can remove any as you please later."
+                          )
+                        ) {
+                          setOpen(true);
+
+                          await setDoc(
+                            doc(db, "users", props.uid),
+                            {
+                              courses: [],
+                            },
+                            { merge: true }
+                          );
+                          window.location.reload(false);
+                        }
+                      }}
+                    >
+                      <AddCircleOutlineIcon sx={{ mr: 1 }} />
+                      Add Courses
+                    </Fab>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <AppBar position="static" elevation={0}>
+                      <Toolbar>
+                        <Typography
+                          variant="h6"
+                          component="div"
+                          sx={{ flexGrow: 1 }}
                         >
-                          Open {currentCourse} Group Chat
+                          {currentCourse} Class: Chat
+                        </Typography>
+                        <Button
+                          color="secondary"
+                          onClick={async () => {
+                            if (
+                              confirm(
+                                "Are you sure? Your data in the course will be saved, but you will not see it until you add the course back again."
+                              )
+                            ) {
+                              setOpen(true);
+
+                              await setDoc(
+                                doc(db, "users", props.uid),
+                                {
+                                  courses: arrayRemove(currentCourse),
+                                },
+                                { merge: true }
+                              );
+                              window.location.reload(false);
+                            }
+                          }}
+                        >
+                          Remove Course
                         </Button>
-                      </a>
-                    </Link>
-                    <Typography variant="h4">Active quizzes:</Typography>
-                    {currentQuizzes}
-                  </Grid>{" "}
-                  <Divider orientation="vertical" flexItem />
-                  <Grid item xs={6}>
-                    <Typography variant="h4">Announcements:</Typography>{" "}
-                    {announcementList}
+                      </Toolbar>
+                    </AppBar>
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="flex-start"
+                      spacing={2}
+                      style={{ paddingTop: "20px" }}
+                    >
+                      {" "}
+                      <Grid item xs={5}>
+                        <Link href={"/" + currentCourse}>
+                          <a target="_blank" rel="noopener noreferrer">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              endIcon={<OpenInNewIcon />}
+                              style={{ margin: "0px 10px 10px 0px" }}
+                            >
+                              {currentCourse} Group Chat
+                            </Button>
+                          </a>
+                        </Link>
+                        <Typography variant="h4">Active quizzes:</Typography>
+                        {currentQuizzes}
+                        <Typography variant="overline">
+                          End of Quizzes!
+                        </Typography>
+                      </Grid>{" "}
+                      <Divider orientation="vertical" flexItem />
+                      <Grid item xs={6}>
+                        <Typography variant="h4">Announcements:</Typography>{" "}
+                        <Linkify
+                          componentDecorator={(
+                            decoratedHref,
+                            decoratedText,
+                            key
+                          ) => (
+                            <a target="blank" href={decoratedHref} key={key}>
+                              {decoratedText}
+                            </a>
+                          )}
+                        >
+                          >{announcementList}
+                        </Linkify>
+                        <Typography variant="overline">
+                          End of announcements!
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Grid>
-          </Container>
+              </Container>
+            )}
+          </>
         )}
       </Box>
+      <Backdrop sx={{ color: "#fff" }} open={open}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 };
@@ -463,14 +622,25 @@ export async function getServerSideProps(context) {
       let courseInfos = await (
         await getDoc(doc(db, "users", authentication.uid))
       ).data().courses;
-      for (let i = 0; i < courseInfos.length; i++) {
-        await setDoc(
-          doc(db, "messages", courseInfos[i]),
-          {
-            students: arrayUnion(authentication.usermail),
-          },
-          { merge: true }
-        );
+
+      if (
+        (await (await getDoc(doc(db, "users", authentication.uid))).data()
+          .name) != "Unknown User"
+      ) {
+        for (let i = 0; i < courseInfos.length; i++) {
+          await setDoc(
+            doc(db, "messages", courseInfos[i]),
+            {
+              students: arrayUnion({
+                email: authentication.usermail,
+                name: await (
+                  await getDoc(doc(db, "users", authentication.uid))
+                ).data().name,
+              }),
+            },
+            { merge: true }
+          );
+        }
       }
 
       // authentication.uid

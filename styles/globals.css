@@ -30,6 +30,17 @@ a {
   -webkit-text-fill-color: transparent;
 }
 
+.footer {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background-color: #fafafa;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin-bottom: 0px;
+  width: 100%;
+}
+
 #teacherIcon {
   background: -moz-linear-gradient(
     90deg,

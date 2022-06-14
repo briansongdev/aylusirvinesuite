@@ -12,6 +12,8 @@ import {
   Paper,
   Grid,
   Container,
+  CircularProgress,
+  Backdrop,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { styled } from "@mui/material/styles";
@@ -37,10 +39,17 @@ const Chat = (props) => {
   const router = useRouter();
   const { chatSubject } = router.query;
 
+  const [open, setOpen] = useState(false);
+
+  const [chatPinged, changePinged] = useState();
+
+  const [firstTime, changeFirst] = useState(false);
+
   useEffect(() => {
     const docRef = doc(db, "messages", chatSubject);
     //real time update
     setTimeout(async () => {
+      changePinged(await (await getDoc(docRef)).data().ping);
       updateChat(await (await getDoc(docRef)).data().chat);
     }, 5000);
     setTimeout(() => {
@@ -96,72 +105,13 @@ const Chat = (props) => {
             Welcome to {chatSubject} Chat!
           </Typography>
           <Typography style={{ margin: "10px 10px 10px 10px" }}>
-            Refreshes every 5 seconds (slow mode). Help each other; be nice.{" "}
+            Refreshes every 5 seconds (slow mode). Stay on topic; help each
+            other.{" "}
             <span style={{ fontWeight: "bold" }}>
               What you say cannot be deleted.
             </span>
           </Typography>
         </Box>
-        <Paper
-          style={{ padding: "15px 15px 15px 15px", height: "65vh" }}
-          elevation={2}
-        >
-          {chat.map((d) => {
-            return (
-              <>
-                {d.user != props.details.name ? (
-                  <>
-                    <Typography>
-                      {d.isTeacher ? (
-                        <>
-                          {" "}
-                          <span id="teacherIcon">[TEACHER] {d.user}: </span>
-                          {d.message}
-                        </>
-                      ) : (
-                        <>
-                          {" "}
-                          <span id="vibrantIcon">
-                            {d.user} ({d.email}):{" "}
-                          </span>
-                          {d.message}
-                        </>
-                      )}
-                    </Typography>
-                    <Typography variant="overline">
-                      {new Date(d.time.seconds * 1000).toLocaleString()}
-                    </Typography>
-                  </>
-                ) : (
-                  <>
-                    <Box style={{ textAlign: "right" }}>
-                      <Typography>
-                        {d.isTeacher ? (
-                          <>
-                            {" "}
-                            <span id="teacherIcon">[TEACHER] {d.user}: </span>
-                            {d.message}
-                          </>
-                        ) : (
-                          <>
-                            {" "}
-                            <span id="vibrantIcon">
-                              {d.user} ({d.email}):{" "}
-                            </span>
-                            {d.message}
-                          </>
-                        )}
-                      </Typography>
-                      <Typography variant="overline">
-                        {new Date(d.time.seconds * 1000).toLocaleString()}
-                      </Typography>
-                    </Box>
-                  </>
-                )}
-              </>
-            );
-          })}
-        </Paper>
         <Grid
           container
           direction="row"
@@ -169,7 +119,7 @@ const Chat = (props) => {
           alignItems="center"
         >
           <TextField
-            style={{ width: "80%", marginTop: "5px" }}
+            style={{ width: "60%", marginTop: "5px" }}
             label="What would you like to say?"
             variant="filled"
             value={currentMessage}
@@ -194,12 +144,136 @@ const Chat = (props) => {
               );
               setMessage("");
             }}
+            size="large"
+            variant="contained"
             disabled={currentMessage == ""}
+            style={{ margin: "5px 5px 5px 10px" }}
           >
             Submit
           </Button>
+          {!props.details.isTeacher ? (
+            <Button
+              onClick={async () => {
+                if (
+                  confirm(
+                    "Only ping teachers to report the chat, or if you have a pressing question in the chat. Your name/email will be recorded when you ping."
+                  )
+                ) {
+                  setOpen(true);
+                  await setDoc(
+                    doc(db, "messages", chatSubject),
+                    {
+                      ping: {
+                        name: props.details.name,
+                        email: props.details.email,
+                      },
+                    },
+                    { merge: true }
+                  );
+                  window.location.reload(false);
+                }
+              }}
+              disabled={
+                typeof chatPinged == "undefined" || !chatPinged.name == ""
+              }
+              style={{ margin: "5px 5px 5px 60px" }}
+              variant="contained"
+              size="large"
+            >
+              {typeof chatPinged == "undefined" || !chatPinged.name == "" ? (
+                <>Already Pinged</>
+              ) : (
+                <>Ping Teachers </>
+              )}
+            </Button>
+          ) : (
+            <></>
+          )}
         </Grid>
+        <Paper
+          style={{
+            padding: "15px 15px 15px 15px",
+            margin: "10px 10px 10px 10px",
+            height: "60vh",
+          }}
+          elevation={2}
+        >
+          <Box
+            style={{
+              overflow: "auto",
+              height: "55vh",
+            }}
+          >
+            {chat
+              .slice()
+              .reverse()
+              .map((d) => {
+                return (
+                  <>
+                    <div style={{ paddingRight: "10px" }}>
+                      {d.user != props.details.name ? (
+                        <>
+                          <Typography>
+                            {d.isTeacher ? (
+                              <>
+                                {" "}
+                                <span id="teacherIcon">
+                                  [TEACHER] {d.user}:{" "}
+                                </span>
+                                {d.message}
+                              </>
+                            ) : (
+                              <>
+                                {" "}
+                                <span id="vibrantIcon">
+                                  {d.user} ({d.email}):{" "}
+                                </span>
+                                {d.message}
+                              </>
+                            )}
+                          </Typography>
+                          <Typography variant="overline">
+                            {new Date(d.time.seconds * 1000).toLocaleString()}
+                          </Typography>
+                        </>
+                      ) : (
+                        <>
+                          <Box style={{ textAlign: "right" }}>
+                            <Typography>
+                              {d.isTeacher ? (
+                                <>
+                                  {" "}
+                                  <span id="teacherIcon">
+                                    [TEACHER] {d.user}:{" "}
+                                  </span>
+                                  {d.message}
+                                </>
+                              ) : (
+                                <>
+                                  {" "}
+                                  <span id="vibrantIcon">
+                                    {d.user} ({d.email}):{" "}
+                                  </span>
+                                  {d.message}
+                                </>
+                              )}
+                            </Typography>
+                            <Typography variant="overline">
+                              {new Date(d.time.seconds * 1000).toLocaleString()}
+                            </Typography>
+                          </Box>
+                        </>
+                      )}
+                    </div>
+                  </>
+                );
+              })}
+          </Box>
+        </Paper>
       </Container>
+      <Backdrop sx={{ color: "#fff" }} open={open}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 };
@@ -236,6 +310,17 @@ export async function getServerSideProps(context) {
         !(await (await getDoc(doc(db, "users", authentication.uid)))
           .data()
           .courses.includes(chatSubject))
+      ) {
+        return {
+          redirect: {
+            destination: "/",
+            permanent: false,
+          },
+        };
+      }
+      if (
+        (await (await getDoc(doc(db, "users", authentication.uid))).data()
+          .name) == "Unknown User"
       ) {
         return {
           redirect: {

@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import Head from "next/head";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
@@ -22,9 +23,22 @@ const theme = createTheme({
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ThemeProvider theme={theme}>
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <>
+      {" "}
+      <Head>
+        <link rel="shortcut icon" href="/favicon.ico" />
+      </Head>
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+        <br />
+        <br />
+        <br />
+        <br />
+        <p className="footer" style={{ textAlign: "right" }}>
+          © AYLUS Irvine 2022.
+        </p>
+      </ThemeProvider>
+    </>
   );
 }
 
