@@ -310,6 +310,18 @@ const Dashboard = (props) => {
                 Welcome to <span id="vibrantIcon">suite.</span>
               </Typography>
             </Stack>
+
+            {props.details.courses.length > 2 ? (
+              <Typography
+                style={{ paddingTop: "10px", textDecoration: "underline" }}
+              >
+                By default, all courses are assigned to you as a teacher. You
+                have <strong>{courses.length}</strong> currently. Please remove
+                the ones you are not teaching.{" "}
+              </Typography>
+            ) : (
+              <></>
+            )}
             {props.details.name == "Unknown Teacher" ? (
               <Paper
                 elevation={3}
@@ -535,18 +547,6 @@ const Dashboard = (props) => {
               </>
             )}
           </Grid>
-
-          {props.details.courses.length > 2 ? (
-            <Typography
-              style={{ paddingTop: "10px", textDecoration: "underline" }}
-            >
-              By default, all courses are assigned to you as a teacher. You have{" "}
-              <strong>{courses.length}</strong> currently. Please remove the
-              ones you are not teaching.{" "}
-            </Typography>
-          ) : (
-            <></>
-          )}
         </Grid>
       </Box>
       <Dialog open={openAnnouncement}>
