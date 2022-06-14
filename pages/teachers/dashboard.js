@@ -707,7 +707,11 @@ const Dashboard = (props) => {
               // reset draftChoices
               changeDraftChoices("");
             }}
-            disabled={draftChoices == "" || draftQuestion == ""}
+            disabled={
+              draftChoices == "" ||
+              draftQuestion == "" ||
+              totalChoices.length > 4
+            }
           >
             Add another choice
           </Button>
@@ -728,11 +732,7 @@ const Dashboard = (props) => {
             style={{ marginBottom: "10px" }}
           />
           <Button
-            disabled={
-              totalChoices.length == 0 ||
-              draftAnswer == "" ||
-              totalChoices.length > 4
-            }
+            disabled={totalChoices.length == 0 || draftAnswer == ""}
             variant="outlined"
             color="secondary"
             style={{ marginBottom: "10px" }}
