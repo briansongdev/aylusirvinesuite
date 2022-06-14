@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import {
   Container,
   TextField,
-  Typography,
+  Backdrop,
+  CircularProgress,
   Grid,
   Button,
   Alert,
@@ -18,9 +19,11 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [open, setOpen] = useState(false);
   const isDisabled = email === "" || password === "";
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setOpen(true);
     await signIn(email, password)
       .then(() => {
         window.location = "/";
@@ -30,73 +33,78 @@ const SignIn = () => {
       });
   };
   return (
-    <Container style={{ width: "35vw", minWidth: "300px" }}>
-      <Head>
-        <title>Login to Suite</title>
-      </Head>
-      <br />
-      <span
-        style={{
-          fontWeight: "bold",
-          fontFamily: "Lexend Deca",
-          fontSize: "60px",
-        }}
-        id="vibrantIcon"
-      >
-        suite.
-      </span>
-      <br />
-      <br />
-      <Grid justify="center" alignItems="center">
-        <form onSubmit={handleSubmit}>
-          <Grid item>
-            <TextField
-              label="Email address"
-              variant="outlined"
-              onChange={(v) => setEmail(v.target.value)}
-              helperText="Use the email from when you signed up through the Google Form."
-              style={{ width: "100%" }}
-            />
-          </Grid>
-          <br />
-          <Grid item>
-            <TextField
-              label="Password"
-              type="password"
-              variant="outlined"
-              onChange={(v) => setPassword(v.target.value)}
-              helperText="Enter your password here."
-              style={{ width: "100%" }}
-            />
-          </Grid>
-          <br />
-          <Button
-            variant="contained"
-            type="submit"
-            disabled={isDisabled}
-            color="primary"
-            style={{ width: "100%", height: "50px" }}
-          >
-            Log in!
-          </Button>
-        </form>
-      </Grid>
-      <br />
-      <Alert severity="success">
-        Avoid using VPNs to access our network and do not access the same
-        account from different devices. Data mismatch and overflow may result.
-      </Alert>
-      <br />
-      <Grid container justify="center">
-        <Grid item>
-          <Link href="/">
-            <IconButton>
-              <ArrowBackIcon />
-            </IconButton>
-          </Link>
+    <>
+      <Container style={{ width: "35vw", minWidth: "300px" }}>
+        <Head>
+          <title>Login to Suite</title>
+        </Head>
+        <br />
+        <span
+          style={{
+            fontWeight: "bold",
+            fontFamily: "Lexend Deca",
+            fontSize: "60px",
+          }}
+          id="vibrantIcon"
+        >
+          suite.
+        </span>
+        <br />
+        <br />
+        <Grid justify="center" alignItems="center">
+          <form onSubmit={handleSubmit}>
+            <Grid item>
+              <TextField
+                label="Email address"
+                variant="outlined"
+                onChange={(v) => setEmail(v.target.value)}
+                helperText="Use the email from when you signed up through the Google Form."
+                style={{ width: "100%" }}
+              />
+            </Grid>
+            <br />
+            <Grid item>
+              <TextField
+                label="Password"
+                type="password"
+                variant="outlined"
+                onChange={(v) => setPassword(v.target.value)}
+                helperText="Enter your password here."
+                style={{ width: "100%" }}
+              />
+            </Grid>
+            <br />
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={isDisabled}
+              color="primary"
+              style={{ width: "100%", height: "50px" }}
+            >
+              Log in!
+            </Button>
+          </form>
         </Grid>
-      </Grid>
-    </Container>
+        <br />
+        <Alert severity="success">
+          Avoid using VPNs to access our network and do not access the same
+          account from different devices. Data mismatch and overflow may result.
+        </Alert>
+        <br />
+        <Grid container justify="center">
+          <Grid item>
+            <Link href="/">
+              <IconButton>
+                <ArrowBackIcon />
+              </IconButton>
+            </Link>
+          </Grid>
+        </Grid>
+      </Container>{" "}
+      <Backdrop sx={{ color: "#fff" }} open={open}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </>
   );
 };
 export default SignIn;
