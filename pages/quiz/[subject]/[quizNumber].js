@@ -210,7 +210,7 @@ const TakeQuiz = (props) => {
                         <br />
                         <br />
                         <span style={{ textDecoration: "underline" }}>
-                          Again, you won't be able to return later.
+                          Again, you won&apos;t be able to return later.
                         </span>
                       </strong>{" "}
                       <br />
