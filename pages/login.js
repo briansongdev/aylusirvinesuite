@@ -29,6 +29,7 @@ const SignIn = () => {
         window.location = "/";
       })
       .catch((e) => {
+        setOpen(false);
         alert(e.toString().replace(/^([^ ]+ ){2}/, ""));
       });
   };
