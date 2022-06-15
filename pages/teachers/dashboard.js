@@ -262,28 +262,30 @@ const Dashboard = (props) => {
             <Box sx={{ flexGrow: 1, ml: "10%" }}>
               {" "}
               <Link href="/">
-                <span
-                  style={{
-                    fontWeight: "bold",
-                    fontFamily: "Lexend Deca",
-                    fontSize: "60px",
-                    cursor: "pointer",
-                  }}
-                  id="vibrantIcon"
-                >
-                  AYLUS Irvine
-                </span>
-                <span
-                  style={{
-                    fontWeight: "bold",
-                    fontFamily: "Lexend Deca",
-                    fontSize: "60px",
-                    cursor: "pointer",
-                  }}
-                  id="vibrantIcon"
-                >
-                  suite.
-                </span>
+                <p>
+                  <span
+                    style={{
+                      fontWeight: "bold",
+                      fontFamily: "Lexend Deca",
+                      fontSize: "60px",
+                      cursor: "pointer",
+                    }}
+                    id="vibrantIcon"
+                  >
+                    AYLUS Irvine
+                  </span>
+                  <span
+                    style={{
+                      fontWeight: "bold",
+                      fontFamily: "Lexend Deca",
+                      fontSize: "60px",
+                      cursor: "pointer",
+                    }}
+                    id="vibrantIcon"
+                  >
+                    suite.
+                  </span>
+                </p>
               </Link>
             </Box>
             <>
