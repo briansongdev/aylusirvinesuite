@@ -21,6 +21,7 @@ import { parseCookies } from "nookies";
 import verifyCookie from "../fire/verifyCookie";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { usePageVisibility } from "react-page-visibility";
 import {
   doc,
   getDoc,
@@ -38,7 +39,7 @@ const Chat = (props) => {
   const [currentMessage, setMessage] = useState("");
   const router = useRouter();
   const { chatSubject } = router.query;
-
+  const isVisible = usePageVisibility();
   const [open, setOpen] = useState(false);
 
   const [chatPinged, changePinged] = useState();
@@ -46,10 +47,12 @@ const Chat = (props) => {
   useEffect(() => {
     const docRef = doc(db, "messages", chatSubject);
     //real time update
-    setTimeout(async () => {
-      changePinged(await (await getDoc(docRef)).data().ping);
-      updateChat(await (await getDoc(docRef)).data().chat);
-    }, 5000);
+    if (isVisible) {
+      setTimeout(async () => {
+        changePinged(await (await getDoc(docRef)).data().ping);
+        updateChat(await (await getDoc(docRef)).data().chat);
+      }, 5000);
+    }
   }, [chat]);
 
   useEffect(() => {

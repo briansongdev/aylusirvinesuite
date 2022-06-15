@@ -21,6 +21,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { doc, getDoc, setDoc, arrayUnion, Timestamp } from "firebase/firestore";
 import { db } from "../../../fire/fireConfig";
+import PageVisibility from "react-page-visibility";
 
 const TakeQuiz = (props) => {
   const [confirmation, setConfirmation] = useState(false);
@@ -34,6 +35,16 @@ const TakeQuiz = (props) => {
   const [studentAnswers, changeStudentAnswers] = useState([]);
 
   const [open, setOpen] = useState(false);
+
+  const [isRecording, setRecording] = useState(false);
+
+  const handleChange = (isVisible) => {
+    if (isRecording) {
+      if (!isVisible) {
+        gradePaper();
+      }
+    }
+  };
 
   async function gradePaper() {
     setOpen(true);
@@ -148,112 +159,123 @@ const TakeQuiz = (props) => {
 
   return (
     <>
-      <Head>
-        <title>Suite by AYLUS Irvine</title>
-      </Head>
-      <Box>
-        <AppBar position="static" sx={{ bgcolor: "#fafafa" }} elevation={0}>
-          <Toolbar>
-            <Box sx={{ flexGrow: 1, ml: "10%" }}>
-              {" "}
-              <Link href="/">
-                <span
-                  style={{
-                    fontWeight: "bold",
-                    fontFamily: "Lexend Deca",
-                    fontSize: "60px",
-                    cursor: "pointer",
-                  }}
-                  id="vibrantIcon"
-                >
-                  suite.
-                </span>
-              </Link>
-            </Box>
-          </Toolbar>
-        </AppBar>
+      <PageVisibility onChange={handleChange}>
+        <>
+          <Head>
+            <title>Taking quiz in {subject} - Suite</title>
+          </Head>
+          <Box>
+            <AppBar position="static" sx={{ bgcolor: "#fafafa" }} elevation={0}>
+              <Toolbar>
+                <Box sx={{ flexGrow: 1, ml: "10%" }}>
+                  {" "}
+                  <Link href="/">
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        fontFamily: "Lexend Deca",
+                        fontSize: "60px",
+                        cursor: "pointer",
+                      }}
+                      id="vibrantIcon"
+                    >
+                      suite.
+                    </span>
+                  </Link>
+                </Box>
+              </Toolbar>
+            </AppBar>
 
-        <Container>
-          <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            style={{ margin: "10px 5px 0px 5px" }}
-          >
-            <Typography>Taking: {props.quizName}</Typography>
-            {!confirmation ? (
-              <>
-                <Alert
-                  severity="warning"
-                  style={{ width: "50%", margin: "5px 5px 5px 5px" }}
-                >
-                  <strong>
-                    I agree to take this quiz for my own benefit, so I can learn
-                    more.
-                  </strong>{" "}
-                  <br />
-                  <br />
-                  I understand that sharing or searching answers will not help
-                  me in the long run. I understand that this quiz is also a test
-                  of my good judgement.
-                  <br />
-                  <br />
-                  For synchronous quizzes, if the teacher stops the quiz, your
-                  answers will be saved + submitted. <strong>Good luck!</strong>
-                </Alert>
-                <Button
-                  onClick={async () => {
-                    setConfirmation(true);
-                    await setDoc(
-                      doc(db, "users", props.uid),
-                      {
-                        activeQuizzes: arrayUnion({
-                          quizSubject: subject,
-                          quizNumber: quizNumber,
-                          quizTitle: props.quizName,
-                          date: JSON.stringify(Timestamp.now()),
-                        }),
-                      },
-                      { merge: true }
-                    );
-                  }}
-                  variant="outlined"
-                  style={{ margin: "15px 15px 15px 15px" }}
-                  size="large"
-                >
-                  Confirm and start
-                </Button>
-              </>
-            ) : (
-              <>
-                <Alert
-                  severity="error"
-                  style={{ width: "50%", margin: "5px 5px 5px 5px" }}
-                >
-                  Do not refresh this page or exit out. Your progress will be
-                  lost, and you won&apos;t be able to return.
-                </Alert>
-                <Container>{listQuizQuestions}</Container>
-                <Button
-                  variant="outlined"
-                  style={{ margin: "15px 15px 15px 15px" }}
-                  size="large"
-                  color="secondary"
-                  onClick={async () => {
-                    await gradePaper();
-                  }}
-                >
-                  Submit Quiz
-                </Button>
-              </>
-            )}
-          </Grid>
-        </Container>
-      </Box>
-      <Backdrop sx={{ color: "#fff" }} open={open}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+            <Container>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+                style={{ margin: "10px 5px 0px 5px" }}
+              >
+                <Typography>Taking: {props.quizName}</Typography>
+                {!confirmation ? (
+                  <>
+                    <Alert
+                      severity="warning"
+                      style={{ width: "50%", margin: "5px 5px 5px 5px" }}
+                    >
+                      <strong>
+                        Once you start this quiz, you will not be able to leave
+                        the tab, go back to Zoom, or pause and return later.
+                        <br />
+                        <br /> If you leave, you will be redirected to the
+                        homepage, and your score will be immediately graded.{" "}
+                        <br />
+                        <br />
+                        <span style={{ textDecoration: "underline" }}>
+                          Again, you won't be able to return later.
+                        </span>
+                      </strong>{" "}
+                      <br />
+                      <br />
+                      For synchronous quizzes, if the teacher stops the quiz,
+                      your answers will all be saved AND submitted.{" "}
+                      <strong>Good luck!</strong>
+                    </Alert>
+                    <Button
+                      onClick={async () => {
+                        setRecording(true);
+                        setConfirmation(true);
+                        await setDoc(
+                          doc(db, "users", props.uid),
+                          {
+                            activeQuizzes: arrayUnion({
+                              quizSubject: subject,
+                              quizNumber: quizNumber,
+                              quizTitle: props.quizName,
+                              date: JSON.stringify(Timestamp.now()),
+                            }),
+                          },
+                          { merge: true }
+                        );
+                      }}
+                      variant="outlined"
+                      style={{ margin: "15px 15px 15px 15px" }}
+                      size="large"
+                    >
+                      Confirm and start
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Alert
+                      severity="error"
+                      style={{ width: "50%", margin: "5px 5px 5px 5px" }}
+                    >
+                      Do not refresh this page, close or leave the tab, or
+                      return to Zoom. Your progress will be lost, and you
+                      won&apos;t be able to return.{" "}
+                      <span style={{ color: "green" }}>Good luck!</span>
+                    </Alert>
+                    <Container>{listQuizQuestions}</Container>
+                    <Button
+                      variant="outlined"
+                      style={{ margin: "15px 15px 15px 15px" }}
+                      size="large"
+                      color="secondary"
+                      onClick={async () => {
+                        await gradePaper();
+                      }}
+                    >
+                      Submit Quiz
+                    </Button>
+                  </>
+                )}
+              </Grid>
+            </Container>
+          </Box>
+          <Backdrop sx={{ color: "#fff" }} open={open}>
+            <CircularProgress color="inherit" />
+          </Backdrop>{" "}
+        </>
+      </PageVisibility>
     </>
   );
 };
