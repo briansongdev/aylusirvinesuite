@@ -95,11 +95,8 @@ const AboutMe = (props) => {
                 sx={{ mr: "10%" }}
                 onClick={async () => {
                   setOpen(true);
-                  await axios.post("/api/logout").then(
-                    setTimeout(() => {
-                      window.location = "/";
-                    }, 500)
-                  );
+                  await axios.post("/api/logout");
+                  window.location = "/";
                 }}
               >
                 Logout

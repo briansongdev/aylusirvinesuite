@@ -59,7 +59,7 @@ export default async function auth(req, res) {
       const options = {
         maxAge: expiresIn,
         httpOnly: true,
-        secure: false,
+        secure: true,
         path: "/",
       };
       res.setHeader("Set-Cookie", serialize("user", cookie, options));

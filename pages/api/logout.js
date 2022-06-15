@@ -5,6 +5,7 @@ function handler(req, res) {
   );
   res.setHeader("Location", "/");
   res.status(302).end();
+  res.redirect("/");
 }
 
 export default handler;
