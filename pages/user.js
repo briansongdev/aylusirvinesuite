@@ -50,7 +50,7 @@ const AboutMe = (props) => {
       totalNumTotal += gradeList[i].numTotal;
     }
     if (totalNumTotal == 0) return "N/A";
-    return (100 * totalNumCorrect) / totalNumTotal;
+    return ((100 * totalNumCorrect) / totalNumTotal).toFixed(2);
   }
 
   return (
