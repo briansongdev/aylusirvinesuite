@@ -93,9 +93,9 @@ const AboutMe = (props) => {
             <>
               <Button
                 sx={{ mr: "10%" }}
-                onClick={() => {
+                onClick={async () => {
                   setOpen(true);
-                  axios.post("/api/logout").then(
+                  await axios.post("/api/logout").then(
                     setTimeout(() => {
                       window.location = "/";
                     }, 500)
