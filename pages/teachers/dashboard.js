@@ -271,6 +271,17 @@ const Dashboard = (props) => {
                   }}
                   id="vibrantIcon"
                 >
+                  AYLUS Irvine
+                </span>
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    fontFamily: "Lexend Deca",
+                    fontSize: "60px",
+                    cursor: "pointer",
+                  }}
+                  id="vibrantIcon"
+                >
                   suite.
                 </span>
               </Link>
