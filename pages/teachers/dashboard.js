@@ -266,19 +266,19 @@ const Dashboard = (props) => {
                   <span
                     style={{
                       fontWeight: "bold",
-                      fontFamily: "Lexend Deca",
+                      fontFamily: "Barlow Condensed",
                       fontSize: "60px",
                       cursor: "pointer",
                     }}
                     id="vibrantIcon"
                   >
-                    AYLUS Irvine
+                    AYLUS Irvine{" "}
                   </span>
                   <span
                     style={{
                       fontWeight: "bold",
                       fontFamily: "Lexend Deca",
-                      fontSize: "60px",
+                      fontSize: "30px",
                       cursor: "pointer",
                     }}
                     id="vibrantIcon"
