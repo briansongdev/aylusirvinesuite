@@ -26,7 +26,7 @@ export default async function auth(req, res) {
               decodedIdToken.email == "brians3476@gmail.com" ||
               decodedIdToken.email == "tim.cai0928@gmail.com" ||
               decodedIdToken.email == "dingandrew23@gmail.com" ||
-              decodedIdToken.email == "amandaspianocorner@gmail.com"
+              decodedIdToken.email == "winteral6828@gmail.com"
             ) {
               await setDoc(docRef, {
                 email: decodedIdToken.email,
