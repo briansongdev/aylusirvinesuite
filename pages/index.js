@@ -510,7 +510,7 @@ const Home = (props) => {
                       {classItems}
                     </List>
                     <Button
-                      variant="filled"
+                      variant="contained"
                       color="secondary"
                       size="medium"
                       startIcon={<AddCircleOutlineIcon />}
