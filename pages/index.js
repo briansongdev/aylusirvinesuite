@@ -103,7 +103,10 @@ const Home = (props) => {
       .map((d) => (
         <>
           {d.isUrgent ? (
-            <Alert severity="error" style={{ margin: "5px 5px 5px 5px" }}>
+            <Alert
+              severity="error"
+              style={{ margin: "5px 5px 5px 5px", width: "100%" }}
+            >
               <AlertTitle>
                 <strong>IMPORTANT - {d.title}</strong>
               </AlertTitle>
@@ -117,7 +120,7 @@ const Home = (props) => {
           ) : (
             <Alert
               severity="info"
-              style={{ margin: "5px 5px 5px 5px" }}
+              style={{ margin: "5px 5px 5px 5px", width: "100%" }}
               variant="outlined"
             >
               <AlertTitle>
@@ -157,30 +160,42 @@ const Home = (props) => {
               {d.isActive ? (
                 <>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     style={{ margin: "10px 10px 0px 10px" }}
                     onClick={() => {
                       router.push("/quiz/" + currentCourse + "/" + index);
                     }}
+                    disabled={testIfDisabled(index)}
                   >
-                    Take Quiz (Unlocked)
+                    {testIfDisabled(index)
+                      ? "Taken Already"
+                      : "Take Quiz (Unlocked)"}
                   </Button>
                 </>
               ) : (
-                <></>
+                <>
+                  {" "}
+                  <Button
+                    variant="contained"
+                    style={{ margin: "10px 10px 0px 10px" }}
+                    disabled={true}
+                  >
+                    Not Unlocked
+                  </Button>
+                </>
               )}
             </>
           ) : (
             <>
               <Button
-                variant="outlined"
+                variant="contained"
                 style={{ margin: "10px 10px 0px 10px" }}
                 onClick={() => {
                   router.push("/quiz/" + currentCourse + "/" + index);
                 }}
                 disabled={testIfDisabled(index)}
               >
-                Take Quiz
+                {testIfDisabled(index) ? "Taken Already" : "Take Quiz"}
               </Button>
             </>
           )}
@@ -475,7 +490,7 @@ const Home = (props) => {
                   spacing={2}
                   style={{ paddingTop: "20px" }}
                 >
-                  <Grid item xs={4}>
+                  <Grid item xs={2}>
                     <Divider />
                     <List>
                       <ListItem disablePadding>
@@ -521,7 +536,7 @@ const Home = (props) => {
                       Add Courses
                     </Fab>
                   </Grid>
-                  <Grid item xs={8}>
+                  <Grid item xs={10}>
                     <AppBar position="static" elevation={0}>
                       <Toolbar>
                         <Typography
@@ -592,11 +607,17 @@ const Home = (props) => {
                             decoratedText,
                             key
                           ) => (
-                            <a target="blank" href={decoratedHref} key={key}>
+                            <a
+                              target="blank"
+                              href={decoratedHref}
+                              key={key}
+                              style={{ color: "#66ff00" }}
+                            >
                               {decoratedText}
                             </a>
                           )}
                         >
+                          {" "}
                           {announcementList}
                         </Linkify>
                         <Typography variant="overline">
