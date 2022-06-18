@@ -509,10 +509,11 @@ const Home = (props) => {
                       <Divider />
                       {classItems}
                     </List>
-                    <Fab
-                      variant="extended"
+                    <Button
+                      variant="filled"
                       color="secondary"
                       size="medium"
+                      startIcon={<AddCircleOutlineIcon />}
                       onClick={async () => {
                         if (
                           confirm(
@@ -532,9 +533,8 @@ const Home = (props) => {
                         }
                       }}
                     >
-                      <AddCircleOutlineIcon sx={{ mr: 1 }} />
                       Add Courses
-                    </Fab>
+                    </Button>
                   </Grid>
                   <Grid item xs={10}>
                     <AppBar position="static" elevation={0}>
