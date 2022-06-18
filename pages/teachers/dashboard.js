@@ -315,10 +315,35 @@ const Dashboard = (props) => {
             alignItems="center"
             direction="column"
           >
-            <Stack style={{ padding: "10px 5px 0px 5px" }}>
+            <Stack
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              style={{ padding: "10px 5px 0px 5px" }}
+            >
               <Typography variant="h5">
                 Welcome to <span id="vibrantIcon">suite.</span>
               </Typography>
+              <Button
+                onClick={async () => {
+                  alert(
+                    "If nothing happens after 15 seconds, refresh the page manually."
+                  );
+                  setOpen(true);
+                  await setDoc(
+                    doc(db, "users", props.uid),
+                    {
+                      isTeacher: false,
+                    },
+                    { merge: true }
+                  );
+                  window.location.reload(false);
+                }}
+                variant="outlined"
+                style={{ margin: "5px 5px 5px 5px" }}
+              >
+                Switch to Student View
+              </Button>
             </Stack>
 
             {props.details.courses.length > 2 ? (

@@ -437,15 +437,36 @@ const Home = (props) => {
                     variant="h4"
                   >
                     Welcome <span id="vibrantIcon">{props.details.name}!</span>{" "}
-                    {props.details.name == "Unknown User" ? (
-                      <>
-                        Please set up your profile in &quot;About Me&quot; on
-                        the top right.
-                      </>
-                    ) : (
-                      <></>
-                    )}
                   </Typography>{" "}
+                  {props.details.email == "brians3476@gmail.com" ||
+                  props.details.email == "asherding2012@gmail.com" ||
+                  props.details.email == "claylandlee@gmail.com" ||
+                  props.details.email == "tim.cai0928@gmail.com" ||
+                  props.details.email == "dingandrew23@gmail.com" ||
+                  props.details.email == "winteral6828@gmail.com" ? (
+                    <Button
+                      onClick={async () => {
+                        alert(
+                          "If nothing happens after 15 seconds, refresh the page manually."
+                        );
+                        setOpen(true);
+                        await setDoc(
+                          doc(db, "users", props.uid),
+                          {
+                            isTeacher: true,
+                          },
+                          { merge: true }
+                        );
+                        window.location.reload(false);
+                      }}
+                      variant="outlined"
+                      style={{ margin: "5px 5px 5px 5px" }}
+                    >
+                      Switch to Teacher View
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
                 </Grid>
                 <Grid
                   container
