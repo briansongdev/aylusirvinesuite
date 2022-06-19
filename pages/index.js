@@ -151,7 +151,7 @@ const Home = (props) => {
           <span id="vibrantIcon">
             {" "}
             Quiz {index + 1}: {d.title} (
-            {d.quizSynced ? "In-Class" : "Take By Yourself"})
+            {d.quizSynced ? "In-Class" : "Take Anytime"})
           </span>{" "}
           Created by <span id="teacherIcon">[TEACHER] {d.createdBy}.</span>
           {d.quizSynced ? (

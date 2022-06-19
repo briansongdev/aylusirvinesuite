@@ -174,7 +174,7 @@ const Dashboard = (props) => {
         <span id="vibrantIcon">
           {" "}
           Quiz {index + 1}: {d.title} (
-          {d.quizSynced ? "In-Class" : "Take By Yourself"})
+          {d.quizSynced ? "In-Class" : "Take Anytime"})
         </span>{" "}
         Created by {d.createdBy} at{" "}
         {new Date(d.time.seconds * 1000).toLocaleString()}
