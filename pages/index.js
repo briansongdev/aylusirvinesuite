@@ -146,6 +146,7 @@ const Home = (props) => {
             paddingLeft: "20px",
             paddingTop: "10px",
             paddingBottom: "10px",
+            paddingRight: "10px",
           }}
         >
           <span id="vibrantIcon">
