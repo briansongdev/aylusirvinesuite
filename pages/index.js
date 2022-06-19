@@ -151,7 +151,7 @@ const Home = (props) => {
           <span id="vibrantIcon">
             {" "}
             Quiz {index + 1}: {d.title} (
-            {d.quizSynced ? "Synchronous" : "Asynchronous"})
+            {d.quizSynced ? "In-Class" : "Take By Yourself"})
           </span>{" "}
           Created by <span id="teacherIcon">[TEACHER] {d.createdBy}.</span>
           {d.quizSynced ? (
@@ -584,11 +584,11 @@ const Home = (props) => {
                           <a target="_blank" rel="noopener noreferrer">
                             <Button
                               variant="contained"
-                              color="primary"
+                              color="secondary"
                               endIcon={<OpenInNewIcon />}
                               style={{ margin: "0px 10px 10px 0px" }}
                             >
-                              {currentCourse} Group Chat
+                              Open Group Chat
                             </Button>
                           </a>
                         </Link>

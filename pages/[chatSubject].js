@@ -239,11 +239,22 @@ const Chat = (props) => {
                               </>
                             ) : (
                               <>
-                                {" "}
-                                <span id="vibrantIcon">
-                                  {d.user} ({d.email}):{" "}
-                                </span>
-                                {d.message}
+                                {props.details.email ==
+                                "brians3476@gmail.com" ? (
+                                  <>
+                                    {" "}
+                                    <span id="vibrantIcon">
+                                      {d.user} ({d.email}):{" "}
+                                    </span>
+                                    {d.message}
+                                  </>
+                                ) : (
+                                  <>
+                                    {" "}
+                                    <span id="vibrantIcon">{d.user}: </span>
+                                    {d.message}
+                                  </>
+                                )}
                               </>
                             )}
                           </Typography>

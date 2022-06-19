@@ -174,12 +174,13 @@ const Dashboard = (props) => {
         <span id="vibrantIcon">
           {" "}
           Quiz {index + 1}: {d.title} (
-          {d.quizSynced ? "Synchronous" : "Asynchronous"})
+          {d.quizSynced ? "In-Class" : "Take By Yourself"})
         </span>{" "}
         Created by {d.createdBy} at{" "}
         {new Date(d.time.seconds * 1000).toLocaleString()}
         {d.quizSynced && !d.isActive ? (
           <Button
+            variant="contained"
             onClick={async () => {
               setOpen(true);
               let arrToChange = await (
@@ -228,7 +229,7 @@ const Dashboard = (props) => {
           paddingTop: "10px",
         }}
       >
-        {d.name} - {d.email}
+        {d.name}
       </Typography>
     </>
   ));
