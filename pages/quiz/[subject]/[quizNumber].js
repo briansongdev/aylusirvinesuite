@@ -191,7 +191,7 @@ const TakeQuiz = (props) => {
                         }}
                         id="vibrantIcon"
                       >
-                        suite.
+                        academy.
                       </span>
                     </p>
                   </Link>

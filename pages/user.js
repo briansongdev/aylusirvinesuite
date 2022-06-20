@@ -56,7 +56,7 @@ const AboutMe = (props) => {
   return (
     <>
       <Head>
-        <title>Suite by AYLUS Irvine</title>
+        <title>Academy by AYLUS Irvine</title>
       </Head>
       <Box>
         <AppBar position="static" sx={{ bgcolor: "#fafafa" }} elevation={0}>
@@ -85,7 +85,7 @@ const AboutMe = (props) => {
                     }}
                     id="vibrantIcon"
                   >
-                    suite.
+                    academy.
                   </span>
                 </p>
               </Link>

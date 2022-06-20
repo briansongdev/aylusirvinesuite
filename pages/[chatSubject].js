@@ -64,7 +64,7 @@ const Chat = (props) => {
   return (
     <>
       <Head>
-        <title>Suite - {chatSubject} Chat</title>
+        <title>Academy - {chatSubject} Chat</title>
       </Head>
       <Box>
         <AppBar position="static" sx={{ bgcolor: "#fafafa" }} elevation={0}>
@@ -93,7 +93,7 @@ const Chat = (props) => {
                     }}
                     id="vibrantIcon"
                   >
-                    suite.
+                    academy.
                   </span>
                 </p>
               </Link>

@@ -52,7 +52,7 @@ const Volunteers = () => {
                     }}
                     id="vibrantIcon"
                   >
-                    suite.
+                    volunteers.
                   </span>
                 </p>
               </Link>

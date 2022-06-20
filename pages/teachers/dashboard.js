@@ -255,7 +255,7 @@ const Dashboard = (props) => {
   return (
     <>
       <Head>
-        <title>Suite by AYLUS Irvine</title>
+        <title>Academy by AYLUS Irvine</title>
       </Head>
       <Box>
         <AppBar position="static" sx={{ bgcolor: "#fafafa" }} elevation={0}>
@@ -284,7 +284,7 @@ const Dashboard = (props) => {
                     }}
                     id="vibrantIcon"
                   >
-                    suite.
+                    academy.
                   </span>
                 </p>
               </Link>
@@ -323,7 +323,7 @@ const Dashboard = (props) => {
               style={{ padding: "10px 5px 0px 5px" }}
             >
               <Typography variant="h5">
-                Welcome to <span id="vibrantIcon">suite.</span>
+                Welcome to <span id="vibrantIcon">academy.</span>
               </Typography>
               <Button
                 onClick={async () => {

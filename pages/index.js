@@ -254,17 +254,31 @@ const Home = (props) => {
                   >
                     AYLUS Irvine{" "}
                   </span>
-                  <span
-                    style={{
-                      fontWeight: "bold",
-                      fontFamily: "Lexend Deca",
-                      fontSize: "30px",
-                      cursor: "pointer",
-                    }}
-                    id="vibrantIcon"
-                  >
-                    suite.
-                  </span>
+                  {props.uid != "" ? (
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        fontFamily: "Lexend Deca",
+                        fontSize: "30px",
+                        cursor: "pointer",
+                      }}
+                      id="vibrantIcon"
+                    >
+                      academy.
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        fontFamily: "Lexend Deca",
+                        fontSize: "30px",
+                        cursor: "pointer",
+                      }}
+                      id="vibrantIcon"
+                    >
+                      suite.
+                    </span>
+                  )}
                 </p>
               </Link>
             </Box>

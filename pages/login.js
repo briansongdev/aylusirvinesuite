@@ -37,7 +37,7 @@ const SignIn = () => {
     <>
       <Container style={{ width: "35vw", minWidth: "300px" }}>
         <Head>
-          <title>Login to Suite</title>
+          <title>Login to Academy</title>
         </Head>
         <br />
         <span
@@ -48,7 +48,7 @@ const SignIn = () => {
           }}
           id="vibrantIcon"
         >
-          suite.
+          academy.
         </span>
         <br />
         <br />
