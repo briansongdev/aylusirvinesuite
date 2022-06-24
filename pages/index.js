@@ -43,6 +43,7 @@ import {
 import { db } from "../fire/fireConfig";
 import { useRouter } from "next/router";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 
 const Home = (props) => {
   const router = useRouter();
@@ -105,7 +106,7 @@ const Home = (props) => {
           {d.isUrgent ? (
             <Alert
               severity="error"
-              style={{ margin: "5px 5px 5px 5px", width: "100%" }}
+              style={{ margin: "10px 5px 5px 5px", width: "100%" }}
             >
               <AlertTitle>
                 <strong>IMPORTANT - {d.title}</strong>
@@ -120,7 +121,7 @@ const Home = (props) => {
           ) : (
             <Alert
               severity="info"
-              style={{ margin: "5px 5px 5px 5px", width: "100%" }}
+              style={{ margin: "10px 5px 5px 5px", width: "100%" }}
               variant="outlined"
             >
               <AlertTitle>
@@ -208,7 +209,34 @@ const Home = (props) => {
     classItems = courses.map((d, index) => (
       <>
         <Divider />
-        <ListItem disablePadding>
+        <ListItem
+          disablePadding
+          secondaryAction={
+            <IconButton
+              edge="end"
+              onClick={async () => {
+                if (
+                  confirm(
+                    "Are you sure? Your data in the course will be saved, but you will not see it until you add the course back again."
+                  )
+                ) {
+                  setOpen(true);
+
+                  await setDoc(
+                    doc(db, "users", props.uid),
+                    {
+                      courses: arrayRemove(currentCourse),
+                    },
+                    { merge: true }
+                  );
+                  window.location.reload(false);
+                }
+              }}
+            >
+              <DoDisturbOnIcon color="secondary" />
+            </IconButton>
+          }
+        >
           <ListItemButton
             selected={selectedIndex === index}
             onClick={(e) => {
@@ -516,7 +544,7 @@ const Home = (props) => {
                               variant="h5"
                               style={{ fontWeight: "bold" }}
                             >
-                              My Current Courses
+                              My Courses
                             </Typography>
                           }
                         />
@@ -557,33 +585,10 @@ const Home = (props) => {
                         <Typography
                           variant="h6"
                           component="div"
-                          sx={{ flexGrow: 1 }}
+                          sx={{ flexGrow: 1, fontWeight: "bold" }}
                         >
-                          {currentCourse} Class: Chat
+                          Welcome to {currentCourse} Class!
                         </Typography>
-                        <Button
-                          color="secondary"
-                          onClick={async () => {
-                            if (
-                              confirm(
-                                "Are you sure? Your data in the course will be saved, but you will not see it until you add the course back again."
-                              )
-                            ) {
-                              setOpen(true);
-
-                              await setDoc(
-                                doc(db, "users", props.uid),
-                                {
-                                  courses: arrayRemove(currentCourse),
-                                },
-                                { merge: true }
-                              );
-                              window.location.reload(false);
-                            }
-                          }}
-                        >
-                          Remove Course
-                        </Button>
                       </Toolbar>
                     </AppBar>
                     <Grid
