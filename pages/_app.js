@@ -64,7 +64,7 @@ function MyApp({ Component, pageProps }) {
         <br />
         <br />
         <p className="footer" style={{ textAlign: "right" }}>
-          © AYLUS Irvine 2022.
+          © AYLUS Irvine 2023.
         </p>
       </ThemeProvider>
     </>

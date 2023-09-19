@@ -44,6 +44,7 @@ import { db } from "../fire/fireConfig";
 import { useRouter } from "next/router";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
+import signIn from "../hooks/useAuth";
 
 const Home = (props) => {
   const router = useRouter();
@@ -81,6 +82,19 @@ const Home = (props) => {
       fetchData();
     }
   }, [currentCourse]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setOpen(true);
+    await signIn("demo@demo.com", "demopass")
+      .then(() => {
+        window.location = "/";
+      })
+      .catch((e) => {
+        setOpen(false);
+        alert(e.toString().replace(/^([^ ]+ ){2}/, ""));
+      });
+  };
 
   function testIfDisabled(index) {
     for (let gl = 0; gl < props.details.activeQuizzes.length; gl++) {
@@ -388,10 +402,7 @@ const Home = (props) => {
               </Typography>
               <Typography>
                 AYLUS Irvine is an organization dedicated to bettering both
-                volunteers&apos; and students&apos; experiences. Leveraging the
-                power of webapps, we can communicate information through a
-                convenient, comfortable, personal, and safe medium like no
-                other. Starting with{" "}
+                volunteers&apos; and students&apos; experiences. Starting with{" "}
                 <span id="vibrantIcon">AYLUS Irvine Volunteers</span> in 2020,
                 we have now expanded to the premier AYLUS Irvine{" "}
                 <span
@@ -419,11 +430,31 @@ const Home = (props) => {
                   a volunteer.
                 </Typography>
               </Stack>
+              <Typography
+                variant="h4"
+                id="vibrantIcon"
+                style={{ fontFamily: "Lexend Deca", textAlign: "center" }}
+              >
+                Here for a demonstration? 🏆
+              </Typography>
+              <Stack
+                direction="column"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Button
+                  variant="contained"
+                  style={{ color: "fuchsia" }}
+                  onClick={handleSubmit}
+                >
+                  Show me around
+                </Button>
+              </Stack>
               <Grid container textAlign="center" justifyContent="center">
                 <Avatar
                   alt="AYLUS Irvine"
                   src="aylus.jpg"
-                  sx={{ width: 100, height: 100 }}
+                  sx={{ width: 70, height: 70 }}
                   style={{
                     border: "0.1px solid lightgray",
                   }}

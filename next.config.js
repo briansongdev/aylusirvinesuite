@@ -9,5 +9,8 @@ module.exports = {
     A4: process.env.A4,
     A5: process.env.A5,
     A6: process.env.A6,
+    PROJECT_ID: process.env.PROJECT_ID,
+    PRIVATE_KEY: process.env.PRIVATE_KEY,
+    CLIENT_EMAIL: process.env.CLIENT_EMAIL,
   },
 };
